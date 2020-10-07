@@ -1,0 +1,49 @@
+uuid: eb2f91a3-76c6-4320-9154-c0d9050075c8
+langcode: en
+status: true
+dependencies: {  }
+id: d7_taxonomy_term_migration_example
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: {  }
+cck_plugin_method: {  }
+migration_tags:
+  - 'Drupal 7'
+migration_group: d7_migration_group_example
+label: 'Example Taxonomy Terms Migration'
+source:
+  plugin: d7_taxonomy_term
+process:
+  tid: tid
+  vid:
+    -
+      plugin: migration_lookup
+      migration: d7_taxonomy_vocabulary_migration_example
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
+  parent_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: parent
+    -
+      plugin: migration_lookup
+      migration: d7_taxonomy_term_migration_example
+  parent:
+    plugin: default_value
+    default_value: 0
+    source: '@parent_id'
+  forum_container: is_container
+  changed: timestamp
+destination:
+  plugin: 'entity:taxonomy_term'
+migration_dependencies:
+  required:
+    - d7_taxonomy_vocabulary_migration_example
+  optional:
+    - d7_field_instance

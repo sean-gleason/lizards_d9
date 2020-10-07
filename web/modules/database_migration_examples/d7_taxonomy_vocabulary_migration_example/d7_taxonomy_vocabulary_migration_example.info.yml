@@ -1,0 +1,9 @@
+name: D7 Taxonomy Vocabulary Migration Example
+type: module
+description: Demonstrates how a taxonomy vocabulary can be migrated.
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools

@@ -1,0 +1,9 @@
+name: migration-examples-d9
+recipe: drupal8
+config:
+  database: 'mysql:5.7'
+  webroot: web/
+drupal: true
+tooling:
+  drush:
+    cmd: /app/vendor/bin/drush

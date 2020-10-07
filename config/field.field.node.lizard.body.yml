@@ -1,0 +1,23 @@
+uuid: fd57138f-8ab8-4967-9d1c-cd20c4b475d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.lizard
+  module:
+    - text
+id: node.lizard.body
+field_name: body
+entity_type: node
+bundle: lizard
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

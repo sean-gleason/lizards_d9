@@ -1,0 +1,19 @@
+uuid: 01ec8a81-bd8a-4e82-b089-9c4378e9c6c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_why_its_metal
+    - node.type.lizard
+id: node.lizard.field_why_its_metal
+field_name: field_why_its_metal
+entity_type: node
+bundle: lizard
+label: 'Why Its Metal'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

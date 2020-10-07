@@ -1,0 +1,48 @@
+uuid: 603ce192-0470-44b1-b75d-67d9c57426d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.lizard.body
+    - field.field.node.lizard.field_address
+    - field.field.node.lizard.field_date
+    - field.field.node.lizard.field_image_credits
+    - field.field.node.lizard.field_lizard_image
+    - field.field.node.lizard.field_lizard_image_media
+    - field.field.node.lizard.field_more_info
+    - field.field.node.lizard.field_region
+    - field.field.node.lizard.field_soundtrack
+    - field.field.node.lizard.field_soundtrack_credits
+    - field.field.node.lizard.field_why_its_metal
+    - node.type.lizard
+  module:
+    - text
+    - user
+id: node.lizard.teaser
+targetEntityType: node
+bundle: lizard
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  field_address: true
+  field_date: true
+  field_image_credits: true
+  field_lizard_image: true
+  field_lizard_image_media: true
+  field_more_info: true
+  field_region: true
+  field_soundtrack: true
+  field_soundtrack_credits: true
+  field_why_its_metal: true

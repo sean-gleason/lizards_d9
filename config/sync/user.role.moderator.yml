@@ -1,0 +1,13 @@
+uuid: a338410c-160a-47c8-9f84-05076d6037f6
+langcode: en
+status: true
+dependencies: {  }
+id: moderator
+label: Moderator
+weight: 3
+is_admin: null
+permissions:
+  - 'administer comments'
+  - 'edit any lizard content'
+  - 'post comments'
+  - 'skip comment approval'

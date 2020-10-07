@@ -1,0 +1,45 @@
+langcode: en
+status: true
+# This migration is dependent on other modules.
+dependencies:
+  required:
+    - address
+    - migrate_drupal
+# Machine name of the migration.
+id: d7_user_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example User Migration'
+source:
+  plugin: d7_user
+process:
+  uid: uid
+  name: name
+  mail: mail
+  pass: pass
+  status: status
+  created: created
+  access: access
+  timezone: timezone
+  login: login
+  timezone: timezone
+  language: language
+  roles:
+    plugin: migration_lookup
+    migration: d7_user_role
+    source: roles
+destination:
+  plugin: entity:user
+#migration d7_user_role is built into core
+# migration_dependencies:
+#   - d7_user_role

@@ -1,0 +1,9 @@
+name: D7 Migration Group Example
+type: module
+description: Demonstrates a Drupal 7 migration group.
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools

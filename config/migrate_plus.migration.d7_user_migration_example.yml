@@ -1,0 +1,35 @@
+uuid: 911e247f-8546-4bba-be18-5f1904713d9d
+langcode: en
+status: true
+dependencies:
+  required:
+    - address
+    - migrate_drupal
+id: d7_user_migration_example
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: {  }
+cck_plugin_method: {  }
+migration_tags:
+  - 'Drupal 7'
+migration_group: d7_migration_group_example
+label: 'Example User Migration'
+source:
+  plugin: d7_user
+process:
+  uid: uid
+  name: name
+  mail: mail
+  pass: pass
+  status: status
+  created: created
+  access: access
+  timezone: timezone
+  login: login
+  language: language
+  roles:
+    plugin: migration_lookup
+    migration: d7_user_role
+    source: roles
+destination:
+  plugin: 'entity:user'
+migration_dependencies: null

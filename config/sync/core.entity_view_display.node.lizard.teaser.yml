@@ -1,0 +1,28 @@
+uuid: 603ce192-0470-44b1-b75d-67d9c57426d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.lizard.body
+    - node.type.lizard
+  module:
+    - text
+    - user
+id: node.lizard.teaser
+targetEntityType: node
+bundle: lizard
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden: {  }

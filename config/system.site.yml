@@ -1,0 +1,14 @@
+uuid: ea633912-1725-4c22-8ed3-75a2655f7515
+name: 'Lizards Are Metal'
+mail: lynne.walsh@agencychief.com
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI

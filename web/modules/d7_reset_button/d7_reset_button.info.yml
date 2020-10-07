@@ -1,0 +1,6 @@
+name: D7 Reset Button
+type: module
+description: Resets the datapoints migrated in the D7 examples
+core: 8.x
+verstion: 1.0
+

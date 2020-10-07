@@ -1,0 +1,17 @@
+langcode: en
+status: true
+# This migration group is not dependent on other modules.
+dependencies: {  }
+# Migration group machine_name.
+id: d7_migration_group_example
+# Human friendly name of the migration group for various UI and CLI tools.
+label: 'Drupal 7 Migration Group Example'
+# Human friendly description for various UI and CLI tools.
+description: 'Example Drupal 7 Migration Group'
+# Database source is Drupal 7.
+source_type: 'Drupal 7'
+# Apply the following configurations to all migrations of this group.
+shared_configuration:
+  source:
+    # The settings.php key of the source database for this migration group.
+    key: migrate

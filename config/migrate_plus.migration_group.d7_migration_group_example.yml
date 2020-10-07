@@ -1,0 +1,14 @@
+uuid: 586fa8fd-2a37-49e0-8bab-4018e6a1fc28
+langcode: en
+status: true
+dependencies: {  }
+id: d7_migration_group_example
+label: 'Drupal 7 Migration Group Example'
+description: 'Example Drupal 7 Migration Group'
+source_type: 'Drupal 7'
+module: null
+shared_configuration:
+  source:
+    key: migrate
+  migration_tags:
+    - ugroup

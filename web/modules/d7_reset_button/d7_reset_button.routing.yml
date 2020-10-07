@@ -1,0 +1,9 @@
+d7_reset_button_form.routing:
+  path: 'admin/config/d7_reset_form'
+  defaults:
+    _form: '\Drupal\d7_reset_button\Form\ResetForm'
+    _title: 'D7 Examples Rest Form'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

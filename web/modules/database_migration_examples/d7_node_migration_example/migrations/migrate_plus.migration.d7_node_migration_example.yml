@@ -1,0 +1,131 @@
+langcode: en
+status: true
+# This migration is dependent on other modules.
+dependencies:
+  required:
+    - address
+    - migrate_drupal
+# Machine name of the migration.
+id: d7_node_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example Nodes Migration'
+source:
+  # Drupal's core node plugin.
+  plugin: d7_node
+  # The content type we are migrating from.
+  node_type: lizard
+process:
+  # Increment node ids instead of assigning them directly.
+  nid: {  }
+  # Increment node revisions instead of assigning them directly.
+  vid: {  }
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: und
+  # Example title migration.
+  title: title
+  # Example body with full_html text-format migration.
+  body:
+    plugin: sub_process
+    source: body
+    process:
+      value: value
+      format:
+        plugin: default_value
+        default_value: full_html
+  # Example migrating D7 location_cck to D8 address.
+  field_address:
+    plugin: location_to_address
+    # The location field we are migrating from.
+    source: field_location
+  field_region:
+    plugin: migration_lookup
+    migration: d7_taxonomy_term_migration_example
+    source: field_region
+  #just a streight text field.
+  field_why_its_metal: field_metal
+  #dates you always need to confirm the format.
+  field_date:
+    plugin: sub_process
+    source: field_date
+    process:
+      value:
+        plugin: format_date
+        from_format: 'Y-m-d H:i:s'
+        to_format: 'Y-m-d'
+        source: value
+  field_more_info:
+    plugin: sub_process
+    source: field_more_info
+    process:
+      uri: url
+      title: title
+      options: attributes
+  field_lizard_image:
+    plugin: sub_process
+    source: field_image
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: d7_file_migration_example
+        source: fid
+      alt: alt
+      title: title
+  field_lizard_image_media:
+    -
+      plugin: sub_process
+      source: field_image
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: image_media_migration_example
+          source: fid
+  field_soundtrack:
+  #   plugin: migration_lookup
+  #   migration: audio_media_migration_example
+  #   source: field_soundtrack
+    -
+      plugin: print_value
+      source: field_soundtrack
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          plugin: migration_lookup
+          migration: audio_media_migration_example
+          source: fid
+        display: title
+        description: data
+  field_soundtrack_credits: field_soundtrack_credits
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+destination:
+  plugin: 'entity:node'
+  # The destination content type.
+  default_bundle: lizard
+# This migration is dependent on other migrations.
+migration_dependencies:
+  required:
+    - d7_taxonomy_term_migration_example
+  optional:
+    - d7_field_instance
+    - d7_comment_field_instance

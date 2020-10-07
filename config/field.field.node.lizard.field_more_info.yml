@@ -1,0 +1,23 @@
+uuid: 789c74f0-7d37-4a66-a237-12303ee10b8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_more_info
+    - node.type.lizard
+  module:
+    - link
+id: node.lizard.field_more_info
+field_name: field_more_info
+entity_type: node
+bundle: lizard
+label: 'More Info'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

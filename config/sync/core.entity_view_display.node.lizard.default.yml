@@ -1,0 +1,35 @@
+uuid: afeb7f21-f052-422e-910e-199b2dbd11c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.lizard.body
+    - field.field.node.lizard.field_address
+    - node.type.lizard
+  module:
+    - address
+    - text
+    - user
+id: node.lizard.default
+targetEntityType: node
+bundle: lizard
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_address:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden: {  }

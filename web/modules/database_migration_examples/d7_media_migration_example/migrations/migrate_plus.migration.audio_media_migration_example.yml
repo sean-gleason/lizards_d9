@@ -1,0 +1,48 @@
+langcode: en
+status: true
+# This migration depends on the File Migration Example.
+dependencies:
+  enforced:
+    module:
+      - d7_file_migration_example
+      - d7_migration_group_example
+      - d7_media_migration_example
+# Machine name of the migration.
+id: audio_media_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example Media Migration'
+source:
+  # The custom source plugin @ d7_media_migration_example/src/Plugin/migrate/source/FileToMediaExample.php.
+  plugin: file_to_media_example
+  # The type of Media entity being migrated.
+  type: audio
+process:
+  bundle: type
+  name: filename
+  thumbnail_title: filename
+  field_media_audio_file/target_id:
+    plugin: migration_lookup
+    migration: d7_file_migration_example
+    source: fid
+  field_media_audio_file/display:
+    plugin: default_value
+    default_value: 1
+  field_credit: field_soundtrack_credits
+destination:
+  plugin: 'entity:media'
+# This migration is dependent on the File migration.
+migration_dependencies:
+  required: 
+    - d7_file_migration_example
+  optional: {}

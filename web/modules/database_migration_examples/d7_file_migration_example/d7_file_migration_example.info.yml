@@ -1,0 +1,9 @@
+name: D7 File Migration Example
+type: module
+description: Demonstrates how a file can be migrated.
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools

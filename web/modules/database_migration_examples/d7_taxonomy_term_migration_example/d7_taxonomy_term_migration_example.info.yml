@@ -1,0 +1,9 @@
+name: D7 Taxonomy Term Migration Example
+type: module
+description: Demonstrates how a taxonomy term can be migrated.
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools

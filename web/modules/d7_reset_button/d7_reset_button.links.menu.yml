@@ -1,0 +1,5 @@
+d7_reset_button_form.routing:
+  title: "D7 Reset Button"
+  route_name: d7_reset_button_form.routing
+  description: 'Reset the data migrated in the D7 examples'
+  parent: system.admin_config_system

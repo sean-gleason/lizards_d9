@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains d7_taxonomy_vocabulary_migration_example.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function d7_taxonomy_vocabulary_migration_example_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the d7_taxonomy_vocabulary_migration_example module.
+    case 'help.page.d7_taxonomy_vocabulary_migration_example':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Demonstrates how a taxonomy vocabulary can be migrated.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

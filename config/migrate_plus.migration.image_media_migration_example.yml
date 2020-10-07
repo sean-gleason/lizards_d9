@@ -1,0 +1,42 @@
+uuid: 053b43e2-87c5-46b0-851f-4c7ba8bd4a19
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - d7_file_migration_example
+      - d7_migration_group_example
+      - d7_media_migration_example
+id: image_media_migration_example
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: {  }
+cck_plugin_method: {  }
+migration_tags:
+  - 'Drupal 7'
+migration_group: d7_migration_group_example
+label: 'Example Media Migration'
+source:
+  plugin: file_to_media_example
+  type: image
+process:
+  bundle: type
+  name: name
+  field_media_image:
+    plugin: sub_process
+    source: field_image
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: d7_file_migration_example
+        source: fid
+      title: title
+      alt: alt
+      width: width
+      height: height
+  field_caption: field_image_caption
+destination:
+  plugin: 'entity:media'
+migration_dependencies:
+  required:
+    - d7_file_migration_example
+  optional: {  }

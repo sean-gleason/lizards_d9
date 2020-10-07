@@ -1,0 +1,82 @@
+langcode: en
+status: true
+# This migration is not dependent on other modules.
+dependencies: {  }
+# Machine name of the migration.
+id: d7_file_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example Files Migration'
+source:
+  # Drupal's core taxonomy term plugin.
+  plugin: d7_file
+  constant:
+    source_domain: 'http://lizards-migration-example-d7.pantheonsite.io/sites/default/files/'
+    # source_domain: 'http://migrate-exmp-d7.lndo.site/sites/default/files/'
+    drupal_file_directory: 'public://'
+process:
+  source_file_name:
+    -
+      plugin: str_replace
+      search: ["public://", "private://"]
+      replace: ["", "private/"]
+      source: uri
+  source_file_path:
+    -
+      plugin: concat
+      delimiter: '/'
+      source:
+        - constant/source_domain
+        - '@source_file_name'
+    -
+      plugin: urlencode
+  destination_file_name:
+    -
+      plugin: callback
+      callable: basename
+      source: uri
+    -
+      plugin: print_value
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Cannot find image'
+  destination_file_path:
+    -
+      plugin: concat
+      source:
+        - constant/drupal_file_directory
+        - '@destination_file_name'
+    -
+      plugin: urlencode
+    -
+      plugin: print_value
+  filename: filename
+  filemime: filemime
+  filesize: filesize
+  status: status
+  type: type
+  uid: uid
+  uri: 
+    plugin: file_copy
+    source: 
+      - '@source_file_path'
+      - '@destination_file_path'
+    file_exists: 'replace'
+    move: false
+destination:
+  plugin: 'entity:file'
+# This migration dependent on the another migration.
+migration_dependencies:
+  required: {}
+  optional: {}

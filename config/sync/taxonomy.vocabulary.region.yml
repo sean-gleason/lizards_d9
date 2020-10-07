@@ -1,0 +1,9 @@
+uuid: f4d3a8f5-492c-457f-a162-186b4cde8217
+langcode: en
+status: true
+dependencies: {  }
+name: Region
+vid: region
+description: 'the location at which the Lizard is most ''Metal'''
+hierarchy: 0
+weight: 0

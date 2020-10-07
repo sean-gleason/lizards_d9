@@ -1,0 +1,12 @@
+name: D7 File to Media Migration Example
+type: module
+description: Demonstrates how a file can be migrated into a Media entity.
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools
+  - media
+  - d7_migration_group_example
+  - d7_file_migration_example

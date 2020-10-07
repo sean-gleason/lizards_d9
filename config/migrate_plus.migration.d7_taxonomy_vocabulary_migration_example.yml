@@ -1,0 +1,36 @@
+uuid: fc323e18-42c4-4d17-adb4-9d4c8b5dea89
+langcode: en
+status: true
+dependencies: {  }
+id: d7_taxonomy_vocabulary_migration_example
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: {  }
+cck_plugin_method: {  }
+migration_tags:
+  - 'Drupal 7'
+migration_group: d7_migration_group_example
+label: 'Example Taxonomy Vocabularies Migration'
+source:
+  plugin: d7_taxonomy_vocabulary
+process:
+  vid:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: make_unique_entity_field
+      entity_type: taxonomy_vocabulary
+      field: vid
+      length: 32
+      migrated: true
+    -
+      plugin: forum_vocabulary
+      machine_name: forums
+  label: name
+  name: name
+  description: description
+  hierarchy: hierarchy
+  weight: weight
+destination:
+  plugin: 'entity:taxonomy_vocabulary'
+migration_dependencies: {  }

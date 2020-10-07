@@ -1,0 +1,9 @@
+name: D7 User Migration Eample
+type: module
+description: Demo's the user migration. Dont forget to custom user fields. 
+core: 8.x
+package: Migration Example modules
+dependencies:
+  - migrate
+  - migrate_plus
+  - migrate_tools

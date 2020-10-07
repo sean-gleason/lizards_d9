@@ -1,0 +1,37 @@
+uuid: f596b6ba-88e5-481f-8dbf-afdb4b447df1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_address
+    - node.type.lizard
+  module:
+    - address
+id: node.lizard.field_address
+field_name: field_address
+entity_type: node
+bundle: lizard
+label: 'Home Address'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: hidden
+    additionalName:
+      override: hidden
+    familyName:
+      override: hidden
+    organization:
+      override: hidden
+    sortingCode:
+      override: hidden
+    dependentLocality:
+      override: hidden
+  fields: {  }
+field_type: address

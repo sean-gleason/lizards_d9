@@ -1,0 +1,52 @@
+langcode: en
+status: true
+# This migration is not dependent on other modules.
+dependencies: {  }
+# Machine name of the migration.
+id: d7_taxonomy_vocabulary_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example Taxonomy Vocabularies Migration'
+source:
+  # Drupal's core taxonomy vocabulary plugin.
+  plugin: d7_taxonomy_vocabulary
+process:
+  # vid is a machine_name in D8, but an integer in D7.
+  vid:
+    -
+      # Convert the human readable name to a machine name.
+      plugin: machine_name
+      # Could also have simply used machine_name as source.
+      source: name
+    -
+      # Ensure that the D8 vid will be unique.
+      plugin: make_unique_entity_field
+      entity_type: taxonomy_vocabulary
+      field: vid
+      # The number of characters to read.
+      length: 32
+      # Make the field unique only for migrated entities.
+      migrated: true
+    -
+      # Check if the vocabulary being migrated is the one used for forums.
+      plugin: forum_vocabulary
+      machine_name: forums
+  label: name
+  name: name
+  description: description
+  hierarchy: hierarchy
+  weight: weight
+destination:
+  plugin: 'entity:taxonomy_vocabulary'
+# This migration is not dependent on other migrations.
+migration_dependencies: {  }

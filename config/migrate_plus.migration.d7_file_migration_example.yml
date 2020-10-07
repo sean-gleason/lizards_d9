@@ -1,0 +1,76 @@
+uuid: cf38d741-22b7-423a-ae7a-b02d116e0c53
+langcode: en
+status: true
+dependencies: {  }
+id: d7_file_migration_example
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: {  }
+cck_plugin_method: {  }
+migration_tags:
+  - 'Drupal 7'
+migration_group: d7_migration_group_example
+label: 'Example Files Migration'
+source:
+  plugin: d7_file
+  constant:
+    source_domain: 'http://lizards-migration-example-d7.pantheonsite.io/sites/default/files/'
+    drupal_file_directory: 'public://'
+process:
+  source_file_name:
+    -
+      plugin: str_replace
+      search:
+        - 'public://'
+        - 'private://'
+      replace:
+        - ''
+        - private/
+      source: uri
+  source_file_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constant/source_domain
+        - '@source_file_name'
+    -
+      plugin: urlencode
+  destination_file_name:
+    -
+      plugin: callback
+      callable: basename
+      source: uri
+    -
+      plugin: print_value
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Cannot find image'
+  destination_file_path:
+    -
+      plugin: concat
+      source:
+        - constant/drupal_file_directory
+        - '@destination_file_name'
+    -
+      plugin: urlencode
+    -
+      plugin: print_value
+  filename: filename
+  filemime: filemime
+  filesize: filesize
+  status: status
+  type: type
+  uid: uid
+  uri:
+    plugin: file_copy
+    source:
+      - '@source_file_path'
+      - '@destination_file_path'
+    file_exists: replace
+    move: false
+destination:
+  plugin: 'entity:file'
+migration_dependencies:
+  required: {  }
+  optional: {  }

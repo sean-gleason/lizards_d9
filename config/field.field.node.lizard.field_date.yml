@@ -1,0 +1,21 @@
+uuid: 650e7dd1-6174-40f5-8276-aecd21593233
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date
+    - node.type.lizard
+  module:
+    - datetime
+id: node.lizard.field_date
+field_name: field_date
+entity_type: node
+bundle: lizard
+label: 'Date at which Metal Status was Acquired'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

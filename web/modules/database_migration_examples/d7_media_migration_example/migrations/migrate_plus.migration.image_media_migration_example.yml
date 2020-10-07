@@ -1,0 +1,55 @@
+langcode: en
+status: true
+# This migration depends on the File Migration Example.
+dependencies:
+  enforced:
+    module:
+      - d7_file_migration_example
+      - d7_migration_group_example
+      - d7_media_migration_example
+# Machine name of the migration.
+id: image_media_migration_example
+# Use the default plugin class.
+class: Drupal\migrate\Plugin\Migration
+# Use the default field plugin method.
+field_plugin_method: {  }
+# Use the default cck plugin method.
+cck_plugin_method: {  }
+# Migration tags to which this migration belongs.
+migration_tags:
+  - 'Drupal 7'
+# Migration group to which this migration belongs.
+migration_group: d7_migration_group_example
+# Human friendly name of the migration for various UI and CLI tools.
+label: 'Example Media Migration'
+source:
+  # Custom plugin from this module.
+  plugin: file_to_media_example
+  # Used in source plugin to get correct node data.
+  type: image
+process:
+  bundle: type
+  name: name
+  # Adds data to each column in the field_media_image
+  field_media_image:
+  # Using field_image from D7, migrate data for each of the below based off the current key.
+      plugin: sub_process
+      source: field_image
+      process:
+        target_id:
+            plugin: migration_lookup
+            migration: d7_file_migration_example
+            source: fid
+        title: title
+        alt: alt
+        width: width
+        height: height
+  # Use value from D7 Node for field_image_caption found in source plugin.
+  field_caption: field_image_caption
+destination:
+  plugin: 'entity:media'
+# This migration is dependent on the File migration.
+migration_dependencies:
+  required: 
+    - d7_file_migration_example
+  optional: {}
