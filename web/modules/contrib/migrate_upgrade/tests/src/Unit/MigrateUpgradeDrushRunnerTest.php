@@ -4,6 +4,7 @@ namespace Drupal\Tests\migrate_upgrade\Unit;
 
 use Drupal\migrate_upgrade\MigrateUpgradeDrushRunner;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests for the  MigrateUpgradeDrushRunner class.
@@ -26,8 +27,9 @@ class MigrateUpgradeDrushRunnerTest extends MigrateTestCase {
    *
    * @dataProvider getData
    */
-  public function testIdSubstitution(array $source, array $expected) {
-    $runner = new TestMigrateUpgradeDrushRunner();
+  public function testIdSubstitution(array $source, array $expected): void {
+    $loggerProphet = $this->prophesize(LoggerInterface::class);
+    $runner = new TestMigrateUpgradeDrushRunner($loggerProphet->reveal());
     $results = $runner->substituteIds($source);
     $this->assertArrayEquals($expected, $results);
   }
@@ -38,7 +40,7 @@ class MigrateUpgradeDrushRunnerTest extends MigrateTestCase {
    * @return array
    *   The test data.
    */
-  public function getData() {
+  public function getData(): array {
     return [
       'Single Migration Lookup' => [
         'source_data' => [
@@ -132,6 +134,47 @@ class MigrateUpgradeDrushRunnerTest extends MigrateTestCase {
           ],
         ],
       ],
+      'Derivative Migration Lookup' => [
+        'source_data' => [
+          'id' => 'my_migration',
+          'process' => [
+            'element' => [
+              'plugin' => 'migration_lookup',
+              'migration' => 'derivable_migration',
+              'source' => 'value',
+            ],
+          ],
+          'migration_dependencies' => [
+            'required' => [
+              'derivable_migration',
+              'required_dependency',
+            ],
+            'optional' => ['optional_dependency'],
+          ],
+        ],
+        'expected_result' => [
+          'id' => 'upgrade_my_migration',
+          'process' => [
+            'element' => [
+              'plugin' => 'migration_lookup',
+              'migration' => [
+                'upgrade_derivable_migration_derivitive_1',
+                'upgrade_derivable_migration_derivitive_2',
+
+              ],
+              'source' => 'value',
+            ],
+          ],
+          'migration_dependencies' => [
+            'required' => [
+              'upgrade_derivable_migration_derivitive_1',
+              'upgrade_derivable_migration_derivitive_2',
+              'upgrade_required_dependency',
+            ],
+            'optional' => ['upgrade_optional_dependency'],
+          ],
+        ],
+      ],
     ];
   }
 
@@ -145,9 +188,28 @@ class TestMigrateUpgradeDrushRunner extends MigrateUpgradeDrushRunner {
   /**
    * {@inheritdoc}
    */
-  public function substituteIds($entity_array) {
+  public function __construct(LoggerInterface $logger, array $options = []) {
+    parent::__construct($logger, $options);
+    $this->migrationList = [
+      'my_previous_migration' => [],
+      'my_previous_migration_1' => [],
+      'my_previous_migration_2' => [],
+      'derivable_migration:derivitive_1' => [],
+      'derivable_migration:derivitive_2' => [],
+      'required_dependency' => [],
+      'optional_dependency' => [],
+    ];
+  }
+
+  // @codingStandardsIgnoreStart
+  /**
+   * {@inheritdoc}
+   *
+   */
+  public function substituteIds(array $entity_array) {
     return parent::substituteIds($entity_array);
   }
+  // @codingStandardsIgnoreEnd
 
 }
 
@@ -159,11 +221,12 @@ if (!function_exists('drush_get_option')) {
    * Override for called function.
    *
    * @param mixed $option
-   *   The name of the option to get
+   *   The name of the option to get.
    * @param mixed $default
-   *   Optional. The value to return if the option has not been set
+   *   Optional. The value to return if the option has not been set.
    * @param mixed $context
-   *   Optional. The context to check for the option. If this is set, only this context will be searched.
+   *   Optional. The context to check for the option. If this is set, only this
+   *   context will be searched.
    *
    * @return mixed
    *   The default, for this override.

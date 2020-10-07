@@ -210,7 +210,7 @@ class Inline
                 return 'false';
             case ctype_digit($value):
                 return \is_string($value) ? "'$value'" : (int) $value;
-            case is_numeric($value) && false === strpos($value, "\f") && false === strpos($value, "\n") && false === strpos($value, "\r") && false === strpos($value, "\t") && false === strpos($value, "\v"):
+            case is_numeric($value):
                 $locale = setlocale(LC_NUMERIC, 0);
                 if (false !== $locale) {
                     setlocale(LC_NUMERIC, 'C');

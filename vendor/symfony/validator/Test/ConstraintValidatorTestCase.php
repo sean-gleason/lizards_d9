@@ -12,22 +12,15 @@
 namespace Symfony\Component\Validator\Test;
 
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\Constraint\IsIdentical;
-use PHPUnit\Framework\Constraint\IsInstanceOf;
-use PHPUnit\Framework\Constraint\IsNull;
-use PHPUnit\Framework\Constraint\LogicalOr;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Context\ExecutionContext;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\PropertyMetadata;
-use Symfony\Component\Validator\Validator\ContextualValidatorInterface;
 
 /**
  * A test case to ease testing Constraint Validators.
@@ -106,6 +99,7 @@ abstract class ConstraintValidatorTestCase extends TestCase
     {
         $translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')->getMock();
         $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
+        $contextualValidator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ContextualValidatorInterface')->getMock();
 
         $context = new ExecutionContext($validator, $this->root, $translator);
         $context->setGroup($this->group);
@@ -115,7 +109,7 @@ abstract class ConstraintValidatorTestCase extends TestCase
         $validator->expects($this->any())
             ->method('inContext')
             ->with($context)
-            ->willReturn($this->getMockBuilder(AssertingContextualValidator::class)->setMethods(null)->getMock());
+            ->willReturn($contextualValidator);
 
         return $context;
     }
@@ -168,26 +162,36 @@ abstract class ConstraintValidatorTestCase extends TestCase
     protected function expectNoValidate()
     {
         $validator = $this->context->getValidator()->inContext($this->context);
-        $validator->expectNoValidate();
+        $validator->expects($this->never())
+            ->method('atPath');
+        $validator->expects($this->never())
+            ->method('validate');
     }
 
     protected function expectValidateAt($i, $propertyPath, $value, $group)
     {
         $validator = $this->context->getValidator()->inContext($this->context);
-        $validator->expectValidation($i, $propertyPath, $value, $group, function ($passedConstraints) {
-            $expectedConstraints = new LogicalOr();
-            $expectedConstraints->setConstraints([new IsNull(), new IsIdentical([]), new IsInstanceOf(Valid::class)]);
-
-            Assert::assertThat($passedConstraints, $expectedConstraints);
-        });
+        $validator->expects($this->at(2 * $i))
+            ->method('atPath')
+            ->with($propertyPath)
+            ->willReturn($validator);
+        $validator->expects($this->at(2 * $i + 1))
+            ->method('validate')
+            ->with($value, $this->logicalOr(null, [], $this->isInstanceOf('\Symfony\Component\Validator\Constraints\Valid')), $group)
+            ->willReturn($validator);
     }
 
     protected function expectValidateValueAt($i, $propertyPath, $value, $constraints, $group = null)
     {
         $contextualValidator = $this->context->getValidator()->inContext($this->context);
-        $contextualValidator->expectValidation($i, $propertyPath, $value, $group, function ($passedConstraints) use ($constraints) {
-            Assert::assertEquals($constraints, $passedConstraints);
-        });
+        $contextualValidator->expects($this->at(2 * $i))
+            ->method('atPath')
+            ->with($propertyPath)
+            ->willReturn($contextualValidator);
+        $contextualValidator->expects($this->at(2 * $i + 1))
+            ->method('validate')
+            ->with($value, $constraints, $group)
+            ->willReturn($contextualValidator);
     }
 
     protected function assertNoViolation()
@@ -338,68 +342,5 @@ class ConstraintViolationAssertion
             $this->constraint,
             $this->cause
         );
-    }
-}
-
-/**
- * @internal
- */
-class AssertingContextualValidator implements ContextualValidatorInterface
-{
-    private $expectNoValidate = false;
-    private $atPathCalls = -1;
-    private $expectedAtPath = [];
-    private $validateCalls = -1;
-    private $expectedValidate = [];
-
-    public function atPath($path)
-    {
-        Assert::assertFalse($this->expectNoValidate, 'No validation calls have been expected.');
-
-        if (!isset($this->expectedAtPath[++$this->atPathCalls])) {
-            throw new ExpectationFailedException(sprintf('Validation for property path "%s" was not expected.', $path));
-        }
-
-        Assert::assertSame($this->expectedAtPath[$this->atPathCalls], $path);
-
-        return $this;
-    }
-
-    public function validate($value, $constraints = null, $groups = null)
-    {
-        Assert::assertFalse($this->expectNoValidate, 'No validation calls have been expected.');
-
-        list($expectedValue, $expectedGroup, $expectedConstraints) = $this->expectedValidate[++$this->validateCalls];
-
-        Assert::assertSame($expectedValue, $value);
-        $expectedConstraints($constraints);
-        Assert::assertSame($expectedGroup, $groups);
-
-        return $this;
-    }
-
-    public function validateProperty($object, $propertyName, $groups = null)
-    {
-        return $this;
-    }
-
-    public function validatePropertyValue($objectOrClass, $propertyName, $value, $groups = null)
-    {
-        return $this;
-    }
-
-    public function getViolations()
-    {
-    }
-
-    public function expectNoValidate()
-    {
-        $this->expectNoValidate = true;
-    }
-
-    public function expectValidation($call, $propertyPath, $value, $group, $constraints)
-    {
-        $this->expectedAtPath[$call] = $propertyPath;
-        $this->expectedValidate[$call] = [$value, $group, $constraints];
     }
 }
