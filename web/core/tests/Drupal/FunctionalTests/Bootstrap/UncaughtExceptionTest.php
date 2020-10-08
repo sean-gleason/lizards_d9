@@ -38,7 +38,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['error_service_test', 'error_test'];
+  protected static $modules = ['error_service_test', 'error_test'];
 
   /**
    * {@inheritdoc}
@@ -48,7 +48,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $settings_filename = $this->siteDirectory . '/settings.php';
@@ -111,7 +111,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   public function testUncaughtFatalError() {
     $fatal_error = [
       '%type' => 'TypeError',
-      '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62',
+      '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 63',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
     $this->drupalGet('error-test/generate-fatals');

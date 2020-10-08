@@ -69,57 +69,6 @@ function file_field_widget_info_alter(array &$info) {
 }
 
 /**
- * Loads file entities from the database.
- *
- * @param array|null $fids
- *   (optional) An array of entity IDs. If omitted or NULL, all entities are
- *   loaded.
- * @param bool $reset
- *   (optional) Whether to reset the internal file_load_multiple() cache.
- *   Defaults to FALSE.
- *
- * @return array
- *   An array of file entities, indexed by fid.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\file\Entity\File::loadMultiple().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function file_load_multiple(array $fids = NULL, $reset = FALSE) {
-  @trigger_error('file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('file')->resetCache($fids);
-  }
-  return File::loadMultiple($fids);
-}
-
-/**
- * Loads a single file entity from the database.
- *
- * @param int $fid
- *   A file ID.
- * @param bool $reset
- *   (optional) Whether to reset the internal file_load_multiple() cache.
- *   Defaults to FALSE.
- *
- * @return \Drupal\file\FileInterface|null
- *   A file entity or NULL if the file was not found.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\file\Entity\File::load().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function file_load($fid, $reset = FALSE) {
-  @trigger_error('file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('file')->resetCache([$fid]);
-  }
-  return File::load($fid);
-}
-
-/**
  * Copies a file to a new location and adds a file record to the database.
  *
  * This function should be used when manipulating files that have records
@@ -961,18 +910,19 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  */
 function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $validators = [], $destination = FALSE, $replace = FileSystemInterface::EXISTS_REPLACE) {
   $user = \Drupal::currentUser();
+  $original_file_name = trim($file_info->getClientOriginalName(), '.');
   // Check for file upload errors and return FALSE for this file if a lower
   // level system error occurred. For a complete list of errors:
   // See http://php.net/manual/features.file-upload.errors.php.
   switch ($file_info->getError()) {
     case UPLOAD_ERR_INI_SIZE:
     case UPLOAD_ERR_FORM_SIZE:
-      \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_info->getFilename(), '%maxsize' => format_size(Environment::getUploadMaxSize())]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $original_file_name, '%maxsize' => format_size(Environment::getUploadMaxSize())]));
       return FALSE;
 
     case UPLOAD_ERR_PARTIAL:
     case UPLOAD_ERR_NO_FILE:
-      \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', ['%file' => $file_info->getFilename()]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', ['%file' => $original_file_name]));
       return FALSE;
 
     case UPLOAD_ERR_OK:
@@ -984,7 +934,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
 
     default:
       // Unknown error
-      \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $file_info->getFilename()]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $original_file_name]));
       return FALSE;
 
   }
@@ -992,7 +942,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $values = [
     'uid' => $user->id(),
     'status' => 0,
-    'filename' => trim($file_info->getClientOriginalName(), '.'),
+    'filename' => $original_file_name,
     'uri' => $file_info->getRealPath(),
     'filesize' => $file_info->getSize(),
   ];

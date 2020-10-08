@@ -18,14 +18,10 @@
     "require": {
         "composer/installers": "^1.7",
         "cweagans/composer-patches": "^1.6",
-        "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/address": "^1.4",
-        "drupal/console": "^1.0.2",
-        "drupal/core-recommended": "^8.8",
-        "drupal/migrate_tools": "4.0.0-rc1",
-        "drupal/migrate_upgrade": "^3.0",
-        "drupal/upgrade_status": "^2.10",
-        "drush/drush": "^9.0.0",
+        "drupal/core-project-message": "^9.0.0",
+        "drupal/core-recommended": "^9.0.0",
+        "drush/drush": "^10.0.0",
         "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
@@ -68,12 +64,6 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/{$name}": ["type:drupal-drush"]
-        },
-        "drupal-scaffold": {
-            "initial": {
-                ".editorconfig": "../.editorconfig",
-                ".gitattributes": "../.gitattributes"
-            }
         }
     }
 }

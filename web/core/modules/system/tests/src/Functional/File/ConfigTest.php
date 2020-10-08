@@ -16,7 +16,7 @@ class ConfigTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
@@ -32,7 +32,6 @@ class ConfigTest extends BrowserTestBase {
     // Set the file paths to non-default values.
     // The respective directories are created automatically
     // upon form submission.
-    $file_path = $this->publicFilesDirectory;
     $fields = [
       'file_default_scheme' => 'private',
     ];
